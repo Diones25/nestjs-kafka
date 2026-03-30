@@ -19,6 +19,6 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
       }
     ]),
   ],
-  exports: ['KAFKA_SERVICE']
+  exports: [ClientsModule]
 })
-export class KafkaModule {}
+export class KafkaModule { }
