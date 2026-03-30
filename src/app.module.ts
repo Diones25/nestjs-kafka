@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { KafkaModule } from './kafka/kafka.module';
-import { MessageModule } from './message/message.module';
+import { ProducerModule } from './producer/producer.module';
+import { ConsumerModule } from './consumer/consumer.module';
 
 @Module({
-  imports: [KafkaModule, MessageModule],
+  imports: [ProducerModule, ConsumerModule],
   controllers: [],
   providers: [],
 })
