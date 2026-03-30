@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
+import { CreateMessageDto } from './dto/create-message.dto';
 
 @Injectable()
 export class ProducerService {
@@ -8,7 +9,7 @@ export class ProducerService {
     @Inject('KAFKA_SERVICE') private readonly kafka: ClientKafka,
   ) { }
   
-  sendMessage(data: any) {
+  sendMessage(data: CreateMessageDto) {
     return this.kafka.send('message-topic', data);
   }
 }
