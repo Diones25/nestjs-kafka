@@ -14,7 +14,7 @@ async function bootstrap() {
         connectionTimeout: 10000,
       },
       consumer: {
-        groupId: 'nestjs-server-group' // Nome único para o servidor
+        groupId: 'main-app-consumer' 
       },
       producer: {
         createPartitioner: Partitioners.LegacyPartitioner,
