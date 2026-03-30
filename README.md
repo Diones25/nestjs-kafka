@@ -52,6 +52,12 @@ O projeto consiste em uma aplicação NestJS com dois módulos principais:
     npm install
     ```
 
+3.  Inicie os containers do Kafka e Zookeeper via Docker Compose:
+
+    ```bash
+    docker-compose up -d
+    ```
+
 ## Executando a Aplicação
 
 1.  Inicie o servidor de desenvolvimento:
