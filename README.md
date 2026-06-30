@@ -1,6 +1,5 @@
 <p align="center">
-  <img src="https://nestjs.com/img/logo-small.svg" width="120" alt="NestJS Logo" />
-  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Apache_kafka_axis.svg/120px-Apache_kafka_axis.svg.png" width="240" alt="Kafka Logo" />
+  <img src="./src/assets/doc/Kafka_Nestjs.jpg" width="320" alt="Kafka Logo" />
 </p>
 
 <h1 align="center">NestJS with Kafka</h1>
@@ -234,7 +233,7 @@ npm run test:cov
 ### Example request via Insomnia / Postman
 
 <p align="center">
-  <img src="./screenshots/api-request.png" alt="HTTP request to the Producer" width="700"/>
+  <img src="./src/assets/doc/producer.png" alt="HTTP request to the Producer" width="700"/>
 </p>
 
 *`POST /producer` request being tested in Insomnia.*
@@ -242,7 +241,7 @@ npm run test:cov
 ### Consumer log in the terminal
 
 <p align="center">
-  <img src="./screenshots/consumer-log.png" alt="Consumer log receiving a message" width="700"/>
+  <img src="./src/assets/doc/log_consummer.png" alt="Consumer log receiving a message" width="700"/>
 </p>
 
 *Message received and displayed by the Consumer in the console.*
