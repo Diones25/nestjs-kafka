@@ -1,77 +1,78 @@
 <p align="center">
-  <img src="./src/assets/doc/Kafka_Nestjs.jpg" width="320" alt="Kafka Logo" />
+  <img src="https://nestjs.com/img/logo-small.svg" width="120" alt="NestJS Logo" />
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Apache_kafka_axis.svg/120px-Apache_kafka_axis.svg.png" width="240" alt="Kafka Logo" />
 </p>
 
-<h1 align="center">NestJS com Kafka</h1>
+<h1 align="center">NestJS with Kafka</h1>
 
 <p align="center">
-  Aplicação <strong>NestJS</strong> integrada ao <strong>Apache Kafka</strong> para comunicação assíncrona via mensageria.
+  <strong>NestJS</strong> application integrated with <strong>Apache Kafka</strong> for asynchronous messaging.
 </p>
 
 <p align="center">
-  <a href="#-visão-geral">Visão Geral</a>&nbsp;&nbsp;|&nbsp;
-  <a href="#-arquitetura">Arquitetura</a>&nbsp;&nbsp;|&nbsp;
-  <a href="#-pré-requisitos">Pré-requisitos</a>&nbsp;&nbsp;|&nbsp;
-  <a href="#-instalação">Instalação</a>&nbsp;&nbsp;|&nbsp;
-  <a href="#-execução">Execução</a>&nbsp;&nbsp;|&nbsp;
+  <a href="#-overview">Overview</a>&nbsp;&nbsp;|&nbsp;
+  <a href="#-architecture">Architecture</a>&nbsp;&nbsp;|&nbsp;
+  <a href="#-prerequisites">Prerequisites</a>&nbsp;&nbsp;|&nbsp;
+  <a href="#-installation">Installation</a>&nbsp;&nbsp;|&nbsp;
+  <a href="#-running-the-app">Running</a>&nbsp;&nbsp;|&nbsp;
   <a href="#-api">API</a>&nbsp;&nbsp;|&nbsp;
-  <a href="#-testes">Testes</a>&nbsp;&nbsp;|&nbsp;
+  <a href="#-testing">Testing</a>&nbsp;&nbsp;|&nbsp;
   <a href="#-screenshots">Screenshots</a>
 </p>
 
 ---
 
-## 📋 Visão Geral
+## 📋 Overview
 
-Este projeto demonstra a integração do [NestJS](https://nestjs.com/) com o [Apache Kafka](https://kafka.apache.org/) utilizando o padrão de **mensageria assíncrona**. A aplicação expõe uma **API REST** que produz mensagens para um tópico Kafka, enquanto um **consumidor** escuta e processa essas mensagens em tempo real.
+This project demonstrates the integration of [NestJS](https://nestjs.com/) with [Apache Kafka](https://kafka.apache.org/) using the **asynchronous messaging** pattern. The application exposes a **REST API** that produces messages to a Kafka topic, while a **consumer** listens and processes those messages in real time.
 
-### Fluxo de Dados
+### Data Flow
 
 ```
-Cliente HTTP → POST /producer → NestJS Producer → Kafka Topic → NestJS Consumer → Console/Terminal
+HTTP Client → POST /producer → NestJS Producer → Kafka Topic → NestJS Consumer → Console
 ```
 
 ---
 
-## 🏗️ Arquitetura
+## 🏗️ Architecture
 
-### Estrutura de Diretórios
+### Directory Structure
 
 ```
 .
-├── docker-compose.yml          # Infraestrutura Kafka + Zookeeper
+├── docker-compose.yml          # Kafka + Zookeeper infrastructure
 ├── src/
-│   ├── main.ts                 # Ponto de entrada + configuração Kafka
-│   ├── app.module.ts           # Módulo raiz da aplicação
+│   ├── main.ts                 # Entry point + Kafka configuration
+│   ├── app.module.ts           # Root application module
 │   ├── kafka/
-│   │   └── kafka.module.ts     # Módulo compartilhado do cliente Kafka
+│   │   └── kafka.module.ts     # Shared Kafka client module
 │   ├── producer/
 │   │   ├── producer.controller.ts   # POST /producer
-│   │   ├── producer.service.ts      # Lógica de envio ao Kafka
-│   │   ├── producer.module.ts       # Módulo do produtor
+│   │   ├── producer.service.ts      # Kafka send logic
+│   │   ├── producer.module.ts       # Producer module
 │   │   └── dto/
-│   │       └── create-message.dto.ts # Validação da payload
+│   │       └── create-message.dto.ts # Payload validation
 │   └── consumer/
-│       ├── consumer.controller.ts   # Event listener do Kafka
-│       └── consumer.module.ts       # Módulo do consumidor
+│       ├── consumer.controller.ts   # Kafka event listener
+│       └── consumer.module.ts       # Consumer module
 ├── test/
-│   ├── app.e2e-spec.ts         # Teste end-to-end
-│   └── jest-e2e.json           # Configuração do Jest E2E
-└── .env                        # Variáveis de ambiente
+│   ├── app.e2e-spec.ts         # End-to-end test
+│   └── jest-e2e.json           # Jest E2E configuration
+└── .env                        # Environment variables
 ```
 
-### Diagrama da Arquitetura
+### Architecture Diagram
 
 ```mermaid
 graph TD
-    Client[Cliente HTTP] -->|POST /producer| PC[ProducerController]
+    Client[HTTP Client] -->|POST /producer| PC[ProducerController]
     PC --> PS[ProducerService]
     PS -->|"emit('message-topic')"| KC[Kafka Client]
-    KC -->|Produz mensagem| K[Apache Kafka<br/>message-topic]
-    K -->|Consome mensagem| CC[ConsumerController]
+    KC -->|Produce message| K[Apache Kafka<br/>message-topic]
+    K -->|Consume message| CC[ConsumerController]
     CC -->|"@EventPattern"| LOG[console.log]
 
-    subgraph "Infraestrutura Docker"
+    subgraph "Docker Infrastructure"
         ZK[Zookeeper :2181]
         K --> ZK
     end
@@ -81,80 +82,80 @@ graph TD
     style LOG fill:#e8f5e9
 ```
 
-### Componentes
+### Components
 
-| Componente | Tecnologia | Responsabilidade |
+| Component | Technology | Responsibility |
 |---|---|---|
-| **API REST** | NestJS + Express | Endpoint `POST /producer` com validação |
-| **Cliente Kafka** | `@nestjs/microservices` + KafkaJS | Conexão e comunicação com o broker |
-| **Producer** | KafkaJS Producer | Publica mensagens no tópico `message-topic` |
-| **Consumer** | KafkaJS Consumer | Escuta o tópico e processa eventos |
-| **Broker** | Confluent Kafka 7.4.0 | Mensageria distribuída |
-| **Zookeeper** | Confluent Zookeeper 7.4.0 | Coordenação do cluster Kafka |
+| **REST API** | NestJS + Express | `POST /producer` endpoint with validation |
+| **Kafka Client** | `@nestjs/microservices` + KafkaJS | Broker connection and communication |
+| **Producer** | KafkaJS Producer | Publishes messages to `message-topic` |
+| **Consumer** | KafkaJS Consumer | Listens to the topic and processes events |
+| **Broker** | Confluent Kafka 7.4.0 | Distributed messaging |
+| **Zookeeper** | Confluent Zookeeper 7.4.0 | Kafka cluster coordination |
 
-### Configurações Técnicas
+### Technical Configuration
 
 - **Broker**: `127.0.0.1:9092`
 - **Consumer Group ID**: `main-app-consumer`
-- **Tópico**: `message-topic`
-- **Timeout de conexão**: 10 segundos
+- **Topic**: `message-topic`
+- **Connection timeout**: 10 seconds
 - **Partitioner**: `LegacyPartitioner` (KafkaJS)
-- **Validação**: Global `ValidationPipe` com `whitelist` e `forbidNonWhitelisted`
-- **Porta HTTP**: `4000` (configurável via `PORT` no `.env`)
+- **Validation**: Global `ValidationPipe` with `whitelist` and `forbidNonWhitelisted`
+- **HTTP Port**: `4000` (configurable via `PORT` in `.env`)
 
 ---
 
-## ✅ Pré-requisitos
+## ✅ Prerequisites
 
 - **Node.js** >= 22
 - **npm** >= 10
-- **Docker** e **Docker Compose** (para subir o Kafka)
+- **Docker** and **Docker Compose** (to run Kafka)
 
 ---
 
-## 🔧 Instalação
+## 🔧 Installation
 
-### 1. Clone o repositório
+### 1. Clone the repository
 
 ```bash
-git clone https://github.com/seu-usuario/nestjs-kafka.git
+git clone https://github.com/your-username/nestjs-kafka.git
 cd nestjs-kafka
 ```
 
-### 2. Instale as dependências
+### 2. Install dependencies
 
 ```bash
 npm install
 ```
 
-### 3. Configure as variáveis de ambiente
+### 3. Set up environment variables
 
 ```bash
-# .env (já existente no projeto)
+# .env (already present in the project)
 PORT=4000
 ```
 
-### 4. Inicie o Kafka e Zookeeper
+### 4. Start Kafka and Zookeeper
 
 ```bash
 docker-compose up -d
 ```
 
-> Aguarde alguns segundos até que o Kafka esteja pronto para aceitar conexões.
+> Wait a few seconds for Kafka to be ready to accept connections.
 
 ---
 
-## 🚀 Execução
+## 🚀 Running the App
 
-### Desenvolvimento
+### Development
 
 ```bash
 npm run dev
 ```
 
-A aplicação será iniciada em **http://localhost:4000**.
+The application will be available at **http://localhost:4000**.
 
-### Produção
+### Production
 
 ```bash
 npm run build
@@ -167,58 +168,58 @@ npm run start:prod
 
 ### `POST /producer`
 
-Envia uma mensagem para o tópico `message-topic` do Kafka.
+Sends a message to the `message-topic` Kafka topic.
 
 #### Request Body
 
-| Campo | Tipo | Obrigatório | Descrição |
+| Field | Type | Required | Description |
 |---|---|---|---|
-| `content` | `string` | Sim | Conteúdo da mensagem |
-| `author` | `string` | Sim | Nome do autor |
+| `content` | `string` | Yes | Message content |
+| `author` | `string` | Yes | Author name |
 
-#### Exemplo
+#### Example
 
 ```bash
 curl -X POST http://localhost:4000/producer \
   -H "Content-Type: application/json" \
   -d '{
-    "content": "Olá, Kafka!",
+    "content": "Hello, Kafka!",
     "author": "NestJS"
   }'
 ```
 
-#### Respostas
+#### Responses
 
-| Status | Descrição |
+| Status | Description |
 |---|---|
-| `201` | Mensagem enviada ao Kafka com sucesso |
-| `400` | Erro de validação (campos ausentes ou inválidos) |
+| `201` | Message sent to Kafka successfully |
+| `400` | Validation error (missing or invalid fields) |
 
 ### Consumer
 
-O consumidor escuta o tópico `message-topic` e exibe as mensagens recebidas no console do servidor:
+The consumer listens to the `message-topic` and prints received messages to the server console:
 
 ```bash
-[Nest] 12345  - 01/01/2025 12:00:00  Received message: { content: 'Olá, Kafka!', author: 'NestJS' }
+[Nest] 12345  - 01/01/2025 12:00:00  Received message: { content: 'Hello, Kafka!', author: 'NestJS' }
 ```
 
 ---
 
-## 🧪 Testes
+## 🧪 Testing
 
-### Testes unitários
+### Unit tests
 
 ```bash
 npm test
 ```
 
-### Testes end-to-end
+### End-to-end tests
 
 ```bash
 npm run test:e2e
 ```
 
-### Cobertura
+### Coverage
 
 ```bash
 npm run test:cov
@@ -228,40 +229,40 @@ npm run test:cov
 
 ## 📸 Screenshots
 
-> Adicione aqui as imagens das principais telas da aplicação.
+> Add your application screenshots here.
 
-### Exemplo de requisição via Insomnia / Postman
-
-<p align="center">
-  <img src="./src/assets/doc/producer.png" alt="Requisição HTTP para o Producer" width="700"/>
-</p>
-
-*Requisição `POST /producer` sendo testada no Insomnia.*
-
-### Log do Consumer no terminal
+### Example request via Insomnia / Postman
 
 <p align="center">
-  <img src="./src/assets/doc/log_consummer.png" alt="Log do Consumer recebendo mensagem" width="700"/>
+  <img src="./screenshots/api-request.png" alt="HTTP request to the Producer" width="700"/>
 </p>
 
-*Mensagem recebida e exibida pelo Consumer no console.*
+*`POST /producer` request being tested in Insomnia.*
+
+### Consumer log in the terminal
+
+<p align="center">
+  <img src="./screenshots/consumer-log.png" alt="Consumer log receiving a message" width="700"/>
+</p>
+
+*Message received and displayed by the Consumer in the console.*
 
 ---
 
-## 🛠️ Stack Tecnológica
+## 🛠️ Tech Stack
 
-| Categoria | Tecnologias |
+| Category | Technologies |
 |---|---|
 | **Runtime** | Node.js, TypeScript |
 | **Framework** | NestJS 11, Express |
-| **Mensageria** | Apache Kafka, KafkaJS, @nestjs/microservices |
-| **Validação** | class-validator, class-transformer |
-| **Infraestrutura** | Docker, Docker Compose, Confluent Kafka |
-| **Testes** | Jest, Supertest |
+| **Messaging** | Apache Kafka, KafkaJS, @nestjs/microservices |
+| **Validation** | class-validator, class-transformer |
+| **Infrastructure** | Docker, Docker Compose, Confluent Kafka |
+| **Testing** | Jest, Supertest |
 | **Linter/Formatter** | ESLint, Prettier |
 
 ---
 
-## 📄 Licença
+## 📄 License
 
-Este projeto está sob a licença **UNLICENSED**.
+This project is licensed under **UNLICENSED**.
